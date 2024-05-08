@@ -1,6 +1,7 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 
 const priorities = {
     low: 'Low',
@@ -10,7 +11,7 @@ const priorities = {
 
 const statuses = {
     open: 'Open',
-    inProgress: 'In Progress',
+    in_progress: 'In Progress',
     closed: 'Closed',
 };
 
@@ -20,6 +21,10 @@ const form = useForm({
     priority: 'low',
     status: 'open',
 });
+const breadcrumbs = [
+    { label: 'Tickets', url: '/tickets' },
+    { label: 'Create Ticket', url: '/tickets/create' }
+];
 
 function submit() {
     form.post('/tickets', {
@@ -31,6 +36,7 @@ function submit() {
 <template>
     <AuthenticatedLayout>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+            <Breadcrumb :crumbs="breadcrumbs" />
             <div class="mt-5 md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
                     <div class="shadow overflow-hidden sm:rounded-md bg-gray-800 p-6">

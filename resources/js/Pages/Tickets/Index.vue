@@ -5,20 +5,13 @@ import { Link } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import DateUtils from '@/Utils/DateUtils';
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import ServerPagination from "@/Components/ServerPagination.vue";
 const props = defineProps({
-    tickets: Array,
+    tickets: Object,
 })
 
-const currentPage = ref(1);
-const perPage = ref(10);
 
-const paginatedTickets = computed(() => {
-    let start = (currentPage.value - 1) * perPage.value;
-    let end = start + perPage.value;
-    return props.tickets.slice(start, end);
-})
 const breadcrumbs = [
-    { label: 'Dashboard', url: '/' },
     { label: 'Tickets', url: '/tickets' }
 ];
 </script>
@@ -63,13 +56,13 @@ const breadcrumbs = [
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700">
-                    <tr v-for="ticket in paginatedTickets" :key="ticket.id">
+                    <tr v-for="ticket in tickets.data" :key="ticket.id">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ ticket.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ DateUtils.formatDate(ticket.created_at) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">{{ ticket.title }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ ticket.user.name }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ ticket.priority }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ ticket.status }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400 capitalize">{{ ticket.priority }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400 capitalize">{{ ticket.status.split('_').join(' ') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                             <Link :href="route('tickets.show', [ticket.id])">
                                 View
@@ -78,12 +71,7 @@ const breadcrumbs = [
                     </tr>
                     </tbody>
                 </table>
-                <Pagination
-                    :total-items="tickets.length"
-                    :current-page.sync="currentPage"
-                    :per-page="perPage"
-                    @update:currentPage="currentPage = $event"
-                />
+                <ServerPagination :links="tickets['links'] || []" />
             </div>
         </div>
     </AuthenticatedLayout>

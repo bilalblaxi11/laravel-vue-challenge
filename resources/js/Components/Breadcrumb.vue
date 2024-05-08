@@ -1,6 +1,7 @@
 <template>
     <nav class="breadcrumb">
         <ol class="list-none p-0 inline-flex">
+            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a> <span v-if="crumbs"> /</span></li>
             <li class="breadcrumb-item" v-for="(crumb, index) in crumbs" :key="index">
                 <a :href="crumb.url">{{ crumb.label }}</a> <span v-if="crumbs.length !== (index + 1)"> /</span>
             </li>

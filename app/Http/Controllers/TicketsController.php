@@ -17,7 +17,8 @@ class TicketsController extends Controller
     {
         $tickets = Ticket::with('user')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(1);
+
         return inertia('Tickets/Index', [
             'tickets' => $tickets,
         ]);
