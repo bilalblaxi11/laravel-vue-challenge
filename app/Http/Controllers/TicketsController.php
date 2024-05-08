@@ -16,6 +16,17 @@ class TicketsController extends Controller
     public function index()
     {
         $tickets = Ticket::with('user')
+            ->when(request('search'), function ($q, $search) {
+                $q->where('title', 'like', "%{$search}%");
+                $q->orWhere('description', 'like', "%{$search}%");
+                $q->orWhere('priority', 'like', "%{$search}%");
+                $q->orWhere('status', 'like', "%{$search}%");
+                $q->orWhere('created_at', 'like', "%{$search}%");
+                $q->orWhereHas('user', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%");
+                    $q2->orWhere('email', 'like', "%{$search}%");
+                });
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(1);
 

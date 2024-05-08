@@ -1,7 +1,6 @@
 <script setup>
-import Pagination from '@/Components/Pagination.vue'
-import {computed, ref} from "vue";
-import { Link } from "@inertiajs/vue3";
+import {ref, watch} from "vue";
+import { Link, router } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import DateUtils from '@/Utils/DateUtils';
 import Breadcrumb from "@/Components/Breadcrumb.vue";
@@ -11,9 +10,16 @@ const props = defineProps({
 })
 
 
+
 const breadcrumbs = [
     { label: 'Tickets', url: '/tickets' }
 ];
+
+
+const search = ref('');
+watch(search, (value) => {
+    router.get("/tickets", { search: value }, { preserveState: true });
+});
 </script>
 
 <template>
@@ -28,6 +34,7 @@ const breadcrumbs = [
             </div>
             <Breadcrumb :crumbs="breadcrumbs" />
             <div class="overflow-x-auto shadow  sm:rounded-lg">
+                <input v-model="search" type="text" placeholder="Search...">
                 <table class="min-w-full divide-y divide-gray-700">
                     <thead class="">
                     <tr>
