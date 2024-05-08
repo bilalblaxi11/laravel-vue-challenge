@@ -3,7 +3,8 @@ import Pagination from '@/Components/Pagination.vue'
 import {computed, ref} from "vue";
 import { Link } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-
+import DateUtils from '@/Utils/DateUtils';
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 const props = defineProps({
     tickets: Array,
 })
@@ -16,6 +17,10 @@ const paginatedTickets = computed(() => {
     let end = start + perPage.value;
     return props.tickets.slice(start, end);
 })
+const breadcrumbs = [
+    { label: 'Dashboard', url: '/' },
+    { label: 'Tickets', url: '/tickets' }
+];
 </script>
 
 <template>
@@ -28,6 +33,7 @@ const paginatedTickets = computed(() => {
                     Create Ticket
                 </a>
             </div>
+            <Breadcrumb :crumbs="breadcrumbs" />
             <div class="overflow-x-auto shadow  sm:rounded-lg">
                 <table class="min-w-full divide-y divide-gray-700">
                     <thead class="">
@@ -59,7 +65,7 @@ const paginatedTickets = computed(() => {
                     <tbody class="divide-y divide-gray-700">
                     <tr v-for="ticket in paginatedTickets" :key="ticket.id">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ ticket.id }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ ticket.created_at }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ DateUtils.formatDate(ticket.created_at) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">{{ ticket.title }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ ticket.user.name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ ticket.priority }}</td>
